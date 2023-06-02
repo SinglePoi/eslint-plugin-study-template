@@ -11,19 +11,22 @@
 /** @type {import('eslint').Rule.RuleModule} */
 module.exports = {
   meta: {
-    type: null, // `problem`, `suggestion`, or `layout`
+    type: 'problem', // `problem`, `suggestion`, or `layout`
     docs: {
       description: "no var",
       recommended: false,
       url: null, // URL to the documentation page for this rule
     },
-    fixable: null, // Or `code` or `whitespace`
+    fixable: 'code', // Or `code` or `whitespace`
     schema: [], // Add a schema if the rule has options
+    messages: {
+      noVarMsg: '不允许使用var'
+    }
   },
 
-  create(context) {
+  create (context) {
     // variables should be defined here
-
+    const sourceCode = context.sourceCode
     //----------------------------------------------------------------------
     // Helpers
     //----------------------------------------------------------------------
@@ -36,8 +39,13 @@ module.exports = {
 
     return {
       // visitor functions for different types of nodes
-      VariableDeclaration(node) {
-        console.log(node);
+      VariableDeclaration (node) {
+        if (node.kind === 'var') {
+          context.report({
+            node,
+            messageId: 'noVarMsg',
+          })
+        }
       }
     };
   },
