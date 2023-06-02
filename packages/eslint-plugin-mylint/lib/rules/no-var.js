@@ -44,6 +44,10 @@ module.exports = {
           context.report({
             node,
             messageId: 'noVarMsg',
+            fix (fixer) {
+              const varToken = sourceCode.getFirstToken(node)
+              return fixer.replaceText(varToken, 'let')
+            }
           })
         }
       }
